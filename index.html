@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pun & Hongtae ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Sarabun&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <img src="couple.jpg" alt="รูปคู่" class="couple-photo" />
+    <div class="names">Pun & Hongtae</div>
+
+    <h1>Pun & Hongtae ❤️</h1>
+
+    <p>วันครบรอบของเราคืออะไรน้าาา?</p>
+    <p style="font-size: 14px;">(กรุณาใส่วันเดือนปีเป็นตัวเลข เช่น 041125)</p>
+
+    <input
+      type="text"
+      id="anniversary"
+      name="anniversary"
+      maxlength="6"
+      placeholder="เช่น 041125"
+      onkeydown="if(event.key === 'Enter'){ checkDate(); }"
+    />
+
+    <button onclick="checkDate()" style="font-family: 'Sarabun', sans-serif;">ยืนยัน</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
