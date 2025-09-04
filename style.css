@@ -80,3 +80,131 @@ button {
 button:hover {
   background-color: #ff496c;
 }
+
+/* ===== หน้า Menu ===== */
+.menu-page h1 {
+  font-family: 'Itim', cursive;
+  color: #ff6b81;
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu-btn {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  font-size: 18px;
+  background-color: #ffd3e0;
+  color: #ff6b81;
+  text-decoration: none;
+  border-radius: 10px;
+  font-family: 'Sarabun', sans-serif;
+  box-shadow: 0 4px 8px rgba(255, 107, 129, 0.2);
+  transition: background-color 0.3s;
+}
+
+.menu-btn:hover {
+  background-color: #ffe5ec;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Sarabun', sans-serif;
+  background-color: #ffe5ec;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ===== gallery ===== */
+
+#gallery-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.gallery-item {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  color: #ff6b81;
+  background: #ffe5ec;
+  user-select: none;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-item.add-item {
+  font-weight: bold;
+  font-size: 100px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 18px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+h2 {
+  font-family: 'Itim', cursive;
+  color: #8f365f;
+  margin-bottom: 10px;
+  font-size: 2.8rem;
+}
+
+#add-button-top {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 14px;
+  font-size: 16px;
+  background-color: #ff6b81;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Sarabun', sans-serif;
+  transition: background-color 0.3s;
+  display: inline-block; /* ป้องกันยืดเต็มแนว */
+  width: auto;           /* ขนาดตามเนื้อหาปุ่ม */
+  max-width: 200px;      /* จำกัดความยาวถ้ามีข้อความยาว */
+  white-space: nowrap;   /* ป้องกันตัดบรรทัด */
+}
+
+#add-button-top:hover {
+  background-color: #ff4f6a;
+}

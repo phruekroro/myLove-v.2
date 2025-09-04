@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="th">
+<link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Itim&family=Sarabun&display=swap" rel="stylesheet">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Gallery - Pun & Hongtae ❤️</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <button id="add-button-top">+ เพิ่มรูป</button> <!-- ✅ ปุ่มใหม่ด้านขวาบน -->
+
+  <h2>แกลลอรี่รูปภาพของเรา</h2>
+  
+  <div id="gallery-container">
+    <!-- รูปภาพจะถูกสร้างขึ้นโดย JS -->
+  </div>
+
+  <input type="file" id="fileInput" style="display:none" accept="image/*" />
+
+  <!-- โหลดไฟล์ JS แบบ module -->
+  <script type="module" src="gallery.js"></script>
+</body>
+</html>
