@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html lang="th">
-<link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Itim&family=Sarabun&display=swap" rel="stylesheet">
-
 <head>
-  <meta charset="UTF-8" />
-  <title>Gallery - Pun & Hongtae ❤️</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Memories ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Sarabun&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <button id="add-button-top">+ เพิ่มรูป</button> <!-- ✅ ปุ่มใหม่ด้านขวาบน -->
+    <div class="gallery-wrapper">
+        <h1>แกลเลอรี่ความทรงจำ</h1>
 
-  <h2>แกลลอรี่รูปภาพของเรา</h2>
-  
-  <div id="gallery-container">
-    <!-- รูปภาพจะถูกสร้างขึ้นโดย JS -->
-  </div>
+        <div class="gallery-container">
+            <div class="gallery-viewer">
+                </div>
+        </div>
 
-  <input type="file" id="fileInput" style="display:none" accept="image/*" />
+        <div class="controls">
+            <button id="prev-btn" class="nav-btn">◀</button>
+            <div class="actions">
+                <button id="add-btn" class="action-btn">เพิ่มรูป</button>
+                <button id="delete-btn" class="action-btn">ลบรูปนี้</button>
+            </div>
+            <button id="next-btn" class="nav-btn">▶</button>
+        </div>
+    </div>
 
-  <!-- โหลดไฟล์ JS แบบ module -->
-  <script type="module" src="gallery.js"></script>
+    <input type="file" id="fileInput" style="display:none" accept="image/*" />
+
+    <script type="module" src="gallery.js"></script>
+
 </body>
 </html>

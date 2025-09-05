@@ -127,84 +127,106 @@ body {
 
 /* ===== gallery ===== */
 
-#gallery-container {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
+body {
+    margin: 0;
+    font-family: 'Sarabun', sans-serif;
+    background: linear-gradient(135deg, #ff6b81, #ffd3e0);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* ป้องกันการเลื่อนทั้งหน้าจอ */
+    color: #444;
+}
+
+.gallery-wrapper {
+    background: #fff0f5;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+}
+
+h1 {
+    font-family: 'Itim', cursive;
+    color: #ff6b81;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.gallery-container {
+    width: 100%;
+    overflow: hidden; /* ซ่อนรูปภาพที่อยู่นอกกรอบ */
+    position: relative;
+}
+
+.gallery-viewer {
+    display: flex; /* ทำให้รูปเรียงต่อกันในแนวนอน */
+    align-items: center;
+    height: 350px;
+    transition: transform 0.5s ease-in-out; /* สร้าง Animation ตอนเลื่อน */
 }
 
 .gallery-item {
-  position: relative;
-  width: 150px;
-  height: 150px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 80px;
-  color: #ff6b81;
-  background: #ffe5ec;
-  user-select: none;
+    flex: 0 0 100%; /* แต่ละรูปมีความกว้าง 100% ของ container */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    max-width: 80%;
+    max-height: 100%;
+    border-radius: 15px;
+    object-fit: contain;
+    transition: all 0.5s ease-in-out;
+    transform: scale(0.8); /* รูปที่ไม่ใช่รูปหลักจะถูกย่อส่วน */
+    opacity: 0.4; /* รูปที่ไม่ใช่รูปหลักจะจางลง */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.gallery-item.add-item {
-  font-weight: bold;
-  font-size: 100px;
+.gallery-item.active img {
+    transform: scale(1); /* รูปหลักจะขยายเต็มขนาด */
+    opacity: 1; /* รูปหลักจะคมชัด */
+    box-shadow: 0 8px 25px rgba(255, 107, 129, 0.4);
 }
 
-.delete-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: rgba(255, 255, 255, 0.7);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 18px;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-h2 {
-  font-family: 'Itim', cursive;
-  color: #8f365f;
-  margin-bottom: 10px;
-  font-size: 2.8rem;
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
 }
 
-#add-button-top {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 8px 14px;
-  font-size: 16px;
-  background-color: #ff6b81;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Sarabun', sans-serif;
-  transition: background-color 0.3s;
-  display: inline-block; /* ป้องกันยืดเต็มแนว */
-  width: auto;           /* ขนาดตามเนื้อหาปุ่ม */
-  max-width: 200px;      /* จำกัดความยาวถ้ามีข้อความยาว */
-  white-space: nowrap;   /* ป้องกันตัดบรรทัด */
+.nav-btn, .action-btn {
+    font-family: 'Sarabun', sans-serif;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-#add-button-top:hover {
-  background-color: #ff4f6a;
+.nav-btn {
+    background-color: #ff6b81;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.nav-btn:hover {
+    background-color: #ff496c;
+}
+
+.action-btn {
+    background-color: #ffd3e0;
+    color: #ff6b81;
+    margin: 0 10px;
+}
+
+.action-btn:hover {
+    background-color: #ffc1d4;
 }

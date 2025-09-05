@@ -1,0 +1,48 @@
+type User @table {
+  email: String!
+  passwordHash: String!
+  displayName: String!
+  createdAt: Timestamp!
+  profilePictureUrl: String
+}
+
+type Couple @table {
+  user1: User!
+  user2: User!
+  createdAt: Timestamp!
+  name: String
+}
+
+type Photo @table {
+  url: String!
+  uploadedAt: Timestamp!
+  couple: Couple!
+  uploader: User
+  caption: String
+  takenAt: Timestamp
+}
+
+type Album @table {
+  name: String!
+  couple: Couple!
+  createdAt: Timestamp!
+  description: String
+}
+
+type AlbumPhoto @table(key: ["album", "photo"]) {
+  album: Album!
+  photo: Photo!
+}
+
+type Comment @table {
+  text: String!
+  user: User!
+  photo: Photo!
+  createdAt: Timestamp!
+}
+
+type Like @table(key: ["user", "photo"]) {
+  user: User!
+  photo: Photo!
+  createdAt: Timestamp!
+}

@@ -1,0 +1,31 @@
+mutation UserInsert @auth(level: USER) {
+  user_insert(data: {
+    displayName: "John Doe",
+    email: "john.doe@example.com",
+    passwordHash: "hashed_password"
+  })
+}
+
+query ListPhotos @auth(level: PUBLIC) {
+  photos {
+    id
+    url
+    caption
+  }
+}
+
+mutation AddComment @auth(level: USER) {
+  comment_insert(data: {
+    photoId: "123e4567-e89b-12d3-a456-426614174000",
+    userId: "89ab34cd-ef01-2345-bc67-898900123456",
+    text: "Great photo!"
+  })
+}
+
+query GetAlbumsForCouple @auth(level: USER) {
+  albums(where: { coupleId: { eq: "a1b2c3d4-e5f6-7890-1234-567890abcdef" } }) {
+    id
+    name
+    description
+  }
+}
