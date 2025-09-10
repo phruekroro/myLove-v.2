@@ -1,182 +1,180 @@
 // gallery.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getStorage, ref, listAll, getDownloadURL, uploadBytes, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// =================================================================
-//  สำคัญ! กรุณาใส่ข้อมูล Firebase ของคุณที่นี่
-// =================================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyB5Fs_LyLytWLhXyUv_-hl1Us1XtQVCtBs",
-  authDomain: "couple-photo-ce080.firebaseapp.com",
-  projectId: "couple-photo-ce080",
-  storageBucket: "couple-photo-ce080.appspot.com",
-  messagingSenderId: "636387547630",
-  appId: "1:636387547630:web:8b8e7e8694a14d39fc16ff"
-};
+document.addEventListener('DOMContentLoaded', () => {
 
-// --- เริ่มการเชื่อมต่อ Firebase ---
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
-const imagesRef = ref(storage, 'images/');
+  const CLOUD_NAME = "dpojattoi";
+  const UPLOAD_PRESET = "unsigned_gallery";
 
-// --- ดึง Element จาก HTML ---
-const viewer = document.querySelector('.gallery-viewer');
-const fileInput = document.getElementById('fileInput');
-const nextBtn = document.getElementById('next-btn');
-const prevBtn = document.getElementById('prev-btn');
-const addBtn = document.getElementById('add-btn');
-const deleteBtn = document.getElementById('delete-btn');
+  const viewer = document.querySelector('.gallery-viewer');
+  const addBtn = document.getElementById('add-btn');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
 
-// --- ตัวแปรสำหรับจัดการสถานะของแกลเลอรี ---
-let allImages = []; // Array สำหรับเก็บข้อมูลรูปภาพ (URL และ Path)
-let currentIndex = 0; // Index ของรูปภาพที่แสดงอยู่ตรงกลาง
-let touchStartX = 0;
+  const confirmPopup = document.getElementById('confirm-popup');
+  const confirmDeleteBtn = document.getElementById('confirm-delete');
+  const cancelDeleteBtn = document.getElementById('cancel-delete');
 
-// =================================================================
-//  ฟังก์ชันหลัก
-// =================================================================
+  // --- 1. โหลดรูปจาก Local Storage ---
+  // ดึงข้อมูลที่เป็น string จาก 'galleryImages' แล้วแปลงกลับเป็น array
+  // ถ้าไม่มีข้อมูลเก่าเลย ให้เริ่มต้นด้วย array ว่าง []
+  let allImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
+  
+  let currentIndex = 0;
+  let imageToDeleteIndex = -1;
 
-// 1. โหลดรูปทั้งหมดจาก Firebase
-async function loadImages() {
-    viewer.innerHTML = '<h2>กำลังโหลดรูปภาพ...</h2>';
-    try {
-        const res = await listAll(imagesRef);
-        const imagePromises = res.items.map(async (itemRef) => {
-            const url = await getDownloadURL(itemRef);
-            return { url: url, path: itemRef.fullPath };
-        });
+  // --- 2. สร้างฟังก์ชันสำหรับบันทึกข้อมูล ---
+  function saveImagesToLocalStorage() {
+    // แปลง array ของรูปภาพให้เป็น string ก่อนบันทึก
+    localStorage.setItem('galleryImages', JSON.stringify(allImages));
+  }
 
-        allImages = await Promise.all(imagePromises);
-
-        if (allImages.length > 0) {
-            renderGallery();
-        } else {
-            viewer.innerHTML = '<h2>ยังไม่มีรูปภาพ<br>กดปุ่ม "เพิ่มรูป" เพื่อเริ่มต้น</h2>';
-        }
-    } catch (error) {
-        console.error("Error loading images:", error);
-        viewer.innerHTML = '<h2>เกิดข้อผิดพลาดในการโหลดรูปภาพ</h2>';
-    }
-}
-
-// 2. แสดงผลแกลเลอรีบนหน้าจอ
-function renderGallery() {
+  // --- ฟังก์ชันแสดงผลแกลเลอรี (เหมือนเดิม) ---
+  function renderGallery() {
+    viewer.innerHTML = '';
     if (allImages.length === 0) {
-        viewer.style.transform = `translateX(0px)`; // Reset position
-        viewer.innerHTML = '<h2>ยังไม่มีรูปภาพ<br>กดปุ่ม "เพิ่มรูป" เพื่อเริ่มต้น</h2>';
-        return
-    };
-
-    viewer.innerHTML = ''; // เคลียร์รูปเก่าทิ้ง
-
-    // สร้าง Element ของรูปภาพ
-    allImages.forEach((image, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'gallery-item';
-        if (index === currentIndex) {
-            itemDiv.classList.add('active'); // รูปที่อยู่ตรงกลางจะมีคลาส active
-        }
-
-        const img = document.createElement('img');
-        img.src = image.url;
-        img.alt = `รูปที่ ${index + 1}`;
-
-        itemDiv.appendChild(img);
-        viewer.appendChild(itemDiv);
-    });
-
-    // คำนวณตำแหน่งเพื่อเลื่อนรูปภาพ
-    const offset = -currentIndex * viewer.offsetWidth;
-    viewer.style.transform = `translateX(${offset}px)`;
-}
-
-// 3. ฟังก์ชันสำหรับเลื่อนรูป
-function showImage(index) {
-    if (allImages.length === 0) return;
-
-    // คำนวณ index แบบวนลูป
-    if (index >= allImages.length) {
-        currentIndex = 0;
-    } else if (index < 0) {
-        currentIndex = allImages.length - 1;
+      viewer.innerHTML = '<p style="color: #ff6b81;">ยังไม่มีรูปภาพในแกลเลอรี<br>กดปุ่ม "＋ เพิ่มรูป" เพื่อเริ่มต้น</p>';
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+      return;
+    }
+    
+    if (allImages.length === 1) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
     } else {
-        currentIndex = index;
-    }
-    renderGallery();
-}
-
-// 4. อัปโหลดรูปภาพ
-async function uploadImage(file) {
-    if (!file) return;
-
-    const uniqueName = `${Date.now()}_${file.name}`;
-    const newFileRef = ref(storage, `images/${uniqueName}`);
-
-    try {
-        await uploadBytes(newFileRef, file);
-        alert('อัปโหลดรูปเรียบร้อยแล้ว!');
-        loadImages(); // โหลดรูปใหม่ทั้งหมด
-    } catch (err) {
-        console.error("Upload failed:", err);
-        alert('อัปโหลดล้มเหลว');
-    }
-}
-
-// 5. ลบรูปภาพปัจจุบัน
-async function deleteCurrentImage() {
-    if (allImages.length === 0) {
-        alert("ไม่มีรูปภาพให้ลบ");
-        return;
+      prevBtn.style.display = 'block';
+      nextBtn.style.display = 'block';
     }
 
-    if (!confirm('ต้องการลบรูปนี้จริงหรือไม่?')) return;
+    allImages.forEach((url, index) => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'gallery-item';
 
-    try {
-        const imageToDelete = allImages[currentIndex];
-        const imageRef = ref(storage, imageToDelete.path);
-        await deleteObject(imageRef);
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = `รูปที่ ${index + 1}`;
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        imageToDeleteIndex = index;
+        confirmPopup.classList.remove('hidden');
+      });
 
-        alert('ลบรูปเรียบร้อยแล้ว');
-        // โหลดรูปใหม่และกลับไปที่รูปแรก
-        currentIndex = 0;
-        loadImages();
-    } catch (err) {
-        console.error("Delete failed:", err);
-        alert('ลบรูปไม่สำเร็จ');
+      itemDiv.appendChild(img);
+      itemDiv.appendChild(deleteBtn);
+      viewer.appendChild(itemDiv);
+    });
+    updateClasses();
+  }
+
+  // --- ฟังก์ชันอัปเดต Class (เหมือนเดิม) ---
+  function updateClasses() {
+    const items = document.querySelectorAll('.gallery-item');
+    items.forEach((item, index) => {
+      item.classList.remove('active', 'left', 'right');
+      if (index === currentIndex) {
+        item.classList.add('active');
+      } else if (allImages.length > 1) {
+        if (index === (currentIndex - 1 + allImages.length) % allImages.length) {
+          item.classList.add('left');
+        } else if (index === (currentIndex + 1) % allImages.length) {
+          item.classList.add('right');
+        }
+      }
+    });
+  }
+
+  // --- จัดการการเลื่อนรูป (เหมือนเดิม) ---
+  prevBtn.addEventListener('click', () => {
+    if (allImages.length > 0) {
+      currentIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+      updateClasses();
     }
-}
+  });
 
+  nextBtn.addEventListener('click', () => {
+    if (allImages.length > 0) {
+      currentIndex = (currentIndex + 1) % allImages.length;
+      updateClasses();
+    }
+  });
 
-// =================================================================
-//  Event Listeners (ตัวรับคำสั่งจากผู้ใช้)
-// =================================================================
+  // --- Cloudinary Upload Widget ---
+  const myWidget = cloudinary.createUploadWidget({
+    cloudName: CLOUD_NAME,
+    uploadPreset: UPLOAD_PRESET,
+    folder: 'gallery',
+    sources: ['local', 'url', 'camera'],
+    multiple: true,
+    maxFiles: 10,
+    maxFileSize: 5000000,
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      allImages.push(result.info.secure_url);
+      currentIndex = allImages.length - 1;
+      
+      // --- 3. บันทึกข้อมูลหลังเพิ่มรูป ---
+      saveImagesToLocalStorage(); // <-- เพิ่มบรรทัดนี้
 
-// --- คลิกปุ่ม ---
-nextBtn.addEventListener('click', () => showImage(currentIndex + 1));
-prevBtn.addEventListener('click', () => showImage(currentIndex - 1));
-addBtn.addEventListener('click', () => fileInput.click());
-deleteBtn.addEventListener('click', deleteCurrentImage);
-fileInput.addEventListener('change', (e) => uploadImage(e.target.files[0]));
+      renderGallery();
+    } else if (error) {
+      console.error('Upload Error:', error);
+    }
+  });
 
-// --- การปัด (Swipe) บนมือถือ ---
-viewer.addEventListener('touchstart', (e) => {
+  // เปิด widget
+  addBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    myWidget.open();
+  });
+
+  // --- Logic สำหรับ Popup ยืนยันการลบ ---
+  confirmDeleteBtn.addEventListener('click', () => {
+    if (imageToDeleteIndex !== -1) {
+      allImages.splice(imageToDeleteIndex, 1);
+      
+      if (currentIndex > imageToDeleteIndex || currentIndex === allImages.length) {
+          currentIndex = Math.max(0, currentIndex - 1);
+      }
+
+      // --- 4. บันทึกข้อมูลหลังลบรูป ---
+      saveImagesToLocalStorage(); // <-- เพิ่มบรรทัดนี้
+
+      renderGallery();
+      imageToDeleteIndex = -1;
+      confirmPopup.classList.add('hidden');
+    }
+  });
+
+  cancelDeleteBtn.addEventListener('click', () => {
+    imageToDeleteIndex = -1;
+    confirmPopup.classList.add('hidden');
+  });
+  
+  // เพิ่มโค้ด Swipe (เหมือนเดิม)
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const minSwipeDistance = 50;
+
+  viewer.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
-});
+  });
 
-viewer.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const swipeDistance = touchEndX - touchStartX;
-
-    if (swipeDistance > 50) { // ปัดไปทางขวา
-        showImage(currentIndex - 1);
-    } else if (swipeDistance < -50) { // ปัดไปทางซ้าย
-        showImage(currentIndex + 1);
+  viewer.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+    if (allImages.length > 1) {
+      if (deltaX > minSwipeDistance) {
+        prevBtn.click();
+      } else if (deltaX < -minSwipeDistance) {
+        nextBtn.click();
+      }
     }
+  });
+
+  // --- เริ่มการทำงานครั้งแรก ---
+  renderGallery(); // โค้ดนี้จะดึงข้อมูลจาก localStorage มาแสดงผลเอง
 });
-
-// --- ปรับขนาดแกลเลอรีเมื่อขนาดหน้าจอเปลี่ยน ---
-window.addEventListener('resize', renderGallery);
-
-
-// --- เริ่มการทำงานครั้งแรก ---
-loadImages();

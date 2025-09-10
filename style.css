@@ -72,6 +72,7 @@ button {
   color: white;
   border: none;
   border-radius: 8px;
+  font-family: 'Sarabun', sans-serif;
   font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -127,106 +128,188 @@ body {
 
 /* ===== gallery ===== */
 
+/* style.css */
 body {
-    margin: 0;
-    font-family: 'Sarabun', sans-serif;
-    background: linear-gradient(135deg, #ff6b81, #ffd3e0);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* ป้องกันการเลื่อนทั้งหน้าจอ */
-    color: #444;
+  margin: 0;
+  padding: 0;
+  font-family: 'Sarabun', sans-serif;
+  background: linear-gradient(135deg, #ff6b81, #ffd3e0);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;  
+  overflow: hidden; /* ป้องกัน scroll bar เกินมา */
+
 }
 
-.gallery-wrapper {
-    background: #fff0f5;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 90%;
-    max-width: 600px;
+/* ===== General Styles (from login/menu page) ===== */
+.container {
+  background: #fff0f5;
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(255, 107, 129, 0.3);
+  width: 320px;
 }
 
 h1 {
-    font-family: 'Itim', cursive;
-    color: #ff6b81;
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+  font-family: 'Itim', cursive;
+  color: #ff6b81;
+  margin-bottom: 25px;
+  font-size: 2.2rem;
 }
 
+/* ===== Gallery Styles ===== */
+
+#add-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ff6b81;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 16px;
+  font-family: 'Sarabun', sans-serif; /* ✅ ใช้ฟอนต์ Sarabun */
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: inline-block; /* ✅ ไม่ให้ยืดเต็มบรรทัด */
+  width: auto;           /* ✅ ขนาดพอดีกับข้อความ */
+  min-width: unset;      /* ✅ กันไว้กรณีใช้ min-width ที่อื่น */
+}
+
+#add-btn:hover {
+  transform: scale(1.05);
+  background: #ff496c;
+}
+
+
 .gallery-container {
-    width: 100%;
-    overflow: hidden; /* ซ่อนรูปภาพที่อยู่นอกกรอบ */
-    position: relative;
+  position: relative;
+  margin-top: 50px;
+  width: 90vw;
+  max-width: 600px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .gallery-viewer {
-    display: flex; /* ทำให้รูปเรียงต่อกันในแนวนอน */
-    align-items: center;
-    height: 350px;
-    transition: transform 0.5s ease-in-out; /* สร้าง Animation ตอนเลื่อน */
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .gallery-item {
-    flex: 0 0 100%; /* แต่ละรูปมีความกว้าง 100% ของ container */
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%) scale(0.8);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease, z-index 0s 0.25s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
 }
 
 .gallery-item img {
-    max-width: 80%;
-    max-height: 100%;
-    border-radius: 15px;
-    object-fit: contain;
-    transition: all 0.5s ease-in-out;
-    transform: scale(0.8); /* รูปที่ไม่ใช่รูปหลักจะถูกย่อส่วน */
-    opacity: 0.4; /* รูปที่ไม่ใช่รูปหลักจะจางลง */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  object-fit: contain;
 }
 
-.gallery-item.active img {
-    transform: scale(1); /* รูปหลักจะขยายเต็มขนาด */
-    opacity: 1; /* รูปหลักจะคมชัด */
-    box-shadow: 0 8px 25px rgba(255, 107, 129, 0.4);
+/* สไตล์สำหรับปุ่มลบ (X) */
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #ff6b81;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  opacity: 0; /* ซ่อนไว้ก่อน */
+  transition: opacity 0.3s ease, background 0.3s ease;
+  z-index: 4; /* ให้อยู่เหนือรูป */
 }
 
-.controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
+.gallery-item.active .delete-btn {
+  opacity: 1; /* แสดงผลเมื่อรูปภาพ active */
 }
 
-.nav-btn, .action-btn {
-    font-family: 'Sarabun', sans-serif;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.gallery-item:hover .delete-btn {
+  opacity: 1;
 }
+
+
+.gallery-item.active {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  z-index: 3;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.gallery-item.left {
+  transform: translateX(-120%) rotate(-15deg) scale(0.7);
+  opacity: 0.6;
+  z-index: 2;
+}
+
+.gallery-item.right {
+  transform: translateX(20%) rotate(15deg) scale(0.7);
+  opacity: 0.6;
+  z-index: 2;
+}
+
 
 .nav-btn {
-    background-color: #ff6b81;
-    color: white;
-    font-size: 1.5rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  color: #ff6b81;
+  border: none;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 24px;
+  z-index: 5;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+#prev-btn { left: -10px; }
+#next-btn { right: -10px; }
 
-.nav-btn:hover {
-    background-color: #ff496c;
+/* Popup */
+.popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
-
-.action-btn {
-    background-color: #ffd3e0;
-    color: #ff6b81;
-    margin: 0 10px;
-}
-
-.action-btn:hover {
-    background-color: #ffc1d4;
+.popup.hidden { display: none; }
+.popup-content {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 8px;
+  text-align: center;
 }
